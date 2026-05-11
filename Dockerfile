@@ -26,6 +26,8 @@ RUN brew install node
 
 RUN npm install -g @anthropic-ai/claude-code
 
+RUN echo 'export LANG=en_US.UTF-8' >> /home/claude/.bashrc
+
 COPY --chown=claude:claude .tmux.conf /home/claude/.tmux.conf
 COPY --chown=claude:claude .tmux/ /home/claude/.tmux/
 
