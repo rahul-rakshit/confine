@@ -8,15 +8,21 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         git \
         procps \
         tmux \
+        ripgrep \
+        fd-find \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-RUN useradd -m -s /bin/bash claude \
-    && mkdir -p /home/linuxbrew \
-    && chown claude /home/linuxbrew
+ARG HOST_UID=1000
+ARG HOST_GID=1000
 
-USER claude
-ENV HOME=/home/claude
+RUN userdel -r ubuntu 2>/dev/null; groupdel ubuntu 2>/dev/null; \
+    groupadd -g ${HOST_GID} agent; \
+    useradd -m -u ${HOST_UID} -g ${HOST_GID} -s /bin/bash agent
+
+RUN mkdir -p /home/linuxbrew && chown agent /home/linuxbrew
+
+USER agent
 
 RUN NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
@@ -25,12 +31,13 @@ ENV PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:${PATH}
 RUN brew install node
 
 RUN npm install -g @anthropic-ai/claude-code
+RUN npm install -g --ignore-scripts @earendil-works/pi-coding-agent
 
-RUN echo 'export LANG=en_US.UTF-8' >> /home/claude/.bashrc
+RUN echo 'export LANG=en_US.UTF-8' >> /home/agent/.bashrc
 
-COPY --chown=claude:claude .tmux.conf /home/claude/.tmux.conf
-COPY --chown=claude:claude .tmux/ /home/claude/.tmux/
+COPY --chown=agent:agent .tmux.conf /home/agent/.tmux.conf
+COPY --chown=agent:agent .tmux/ /home/agent/.tmux/
 
 WORKDIR /workspace
 
-ENTRYPOINT ["claude"]
+ENTRYPOINT ["/bin/bash"]

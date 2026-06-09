@@ -10,8 +10,9 @@ confine() {
   fi
 
   docker run -d ${name:+--name "$name"} \
-    -v ~/.claude:/home/claude/.claude \
-    -v ~/.claude.json:/home/claude/.claude.json \
+    -v ~/.claude:/home/agent/.claude \
+    -v ~/.claude.json:/home/agent/.claude.json \
+    -v ~/.pi:/home/agent/.pi \
     -v "${dir:A}":/workspace \
     --entrypoint sleep \
     ai_sandbox infinity
