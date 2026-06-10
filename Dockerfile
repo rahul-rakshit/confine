@@ -7,12 +7,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         file \
         git \
         procps \
-        tmux \
-        ripgrep \
-        fd-find \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+# Configurable so that you can make your host user match the container user to avoid permission issues
 ARG HOST_UID=1000
 ARG HOST_GID=1000
 
@@ -20,7 +18,13 @@ RUN userdel -r ubuntu 2>/dev/null; groupdel ubuntu 2>/dev/null; \
     groupadd -g ${HOST_GID} agent; \
     useradd -m -u ${HOST_UID} -g ${HOST_GID} -s /bin/bash agent
 
-RUN mkdir -p /home/linuxbrew && chown agent /home/linuxbrew
+# Creating and chowning directories in advance so that permissions are right when mounting them in later
+RUN mkdir -p /home/linuxbrew && chown agent:agent /home/linuxbrew
+RUN mkdir -p /home/agent/.pi && chown agent:agent /home/agent/.pi
+RUN mkdir -p /home/agent/.claude && chown agent:agent /home/agent/.claude
+RUN mkdir -p /home/agent/.local && chown agent:agent /home/agent/.local
+RUN mkdir -p /home/agent/.tmux && chown agent:agent /home/agent/.tmux
+RUN mkdir -p /home/agent/.config && chown agent:agent /home/agent/.config
 
 USER agent
 
@@ -32,11 +36,14 @@ RUN brew install node
 
 RUN npm install -g @anthropic-ai/claude-code
 RUN npm install -g --ignore-scripts @earendil-works/pi-coding-agent
+RUN brew install anomalyco/tap/opencode
+RUN brew install neovim fd rg tmux
 
-RUN echo 'export LANG=en_US.UTF-8' >> /home/agent/.bashrc
+RUN sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
+       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 
-COPY --chown=agent:agent .tmux.conf /home/agent/.tmux.conf
-COPY --chown=agent:agent .tmux/ /home/agent/.tmux/
+RUN echo "export LANG=en_US.UTF-8" >> /home/agent/.bashrc
+RUN echo "export EDITOR=nvim" >> /home/agent/.bashrc
 
 WORKDIR /workspace
 
