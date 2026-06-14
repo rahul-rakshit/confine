@@ -15,6 +15,7 @@ confine() {
     -v ~/.pi/agent:/home/agent/.pi/agent \
     -v ~/.config/opencode:/home/agent/.config/opencode \
     -v ~/.local/share/opencode:/home/agent/.local/share/opencode \
+    -v ~/.local/state/opencode:/home/agent/.local/state/opencode \
     -v ~/.config/nvim:/home/agent/.config/nvim \
     -v ~/.tmux.conf:/home/agent/.tmux.conf \
     -v ~/.tmux:/home/agent/.tmux \

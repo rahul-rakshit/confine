@@ -44,6 +44,8 @@ RUN sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/p
 
 RUN echo "export LANG=en_US.UTF-8" >> /home/agent/.bashrc
 RUN echo "export EDITOR=nvim" >> /home/agent/.bashrc
+RUN echo "alias vim='nvim'" >> /home/agent/.bashrc
+
 
 WORKDIR /workspace
 
