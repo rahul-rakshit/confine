@@ -36,8 +36,8 @@ RUN brew install node
 
 RUN npm install -g @anthropic-ai/claude-code
 RUN npm install -g --ignore-scripts @earendil-works/pi-coding-agent
-RUN brew install anomalyco/tap/opencode
-RUN brew install neovim fd rg tmux
+RUN npm install -g opencode-ai
+RUN brew install neovim fd rg tmux yt-dlp
 
 RUN sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
@@ -45,7 +45,6 @@ RUN sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/p
 RUN echo "export LANG=en_US.UTF-8" >> /home/agent/.bashrc
 RUN echo "export EDITOR=nvim" >> /home/agent/.bashrc
 RUN echo "alias vim='nvim'" >> /home/agent/.bashrc
-
 
 WORKDIR /workspace
 
