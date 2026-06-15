@@ -9,7 +9,8 @@ confine() {
     return 1
   fi
 
-  docker run -d ${name:+--name "$name"} \
+  local cid
+  cid="$(docker run -d ${name:+--name "$name"} \
     -v ~/.claude:/home/claude/.claude \
     -v ~/.claude.json:/home/claude/.claude.json \
     -v ~/.pi/agent:/home/agent/.pi/agent \
@@ -21,5 +22,7 @@ confine() {
     -v ~/.tmux:/home/agent/.tmux \
     -v "${dir:A}":/workspace \
     --entrypoint sleep \
-    ai_sandbox infinity
+    ai_sandbox infinity)" || return 1
+
+  docker exec -it "$cid" /bin/bash
 }
