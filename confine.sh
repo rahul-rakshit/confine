@@ -11,8 +11,8 @@ confine() {
 
   local cid
   cid="$(docker run -d ${name:+--name "$name"} \
-    -v ~/.claude:/home/claude/.claude \
-    -v ~/.claude.json:/home/claude/.claude.json \
+    -v ~/.claude:/home/agent/.claude \
+    -v ~/.claude.json:/home/agent/.claude.json \
     -v ~/.pi/agent:/home/agent/.pi/agent \
     -v ~/.config/opencode:/home/agent/.config/opencode \
     -v ~/.local/share/opencode:/home/agent/.local/share/opencode \
