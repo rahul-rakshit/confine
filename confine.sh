@@ -11,6 +11,7 @@ confine() {
 
   local cid
   cid="$(docker run -d ${name:+--name "$name"} \
+    -v ~/.ai_agent_env:/home/agent/.ai_agent_env \
     -v ~/.claude:/home/agent/.claude \
     -v ~/.claude.json:/home/agent/.claude.json \
     -v ~/.pi/agent:/home/agent/.pi/agent \
