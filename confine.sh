@@ -1,30 +1,8 @@
 #! /bin/bash
 
 confine() {
-  local dir="."
-  local name
-  local net_args=()
-  local got_dir=0
-
-  while [[ $# -gt 0 ]]; do
-    case "$1" in
-      --network)
-        if [[ "${2:-}" == "host" ]]; then
-          net_args=(--network host)
-        fi
-        shift 2
-        ;;
-      *)
-        if [[ $got_dir -eq 0 ]]; then
-          dir="$1"
-          got_dir=1
-        else
-          name="$1"
-        fi
-        shift
-        ;;
-    esac
-  done
+  local dir="${1:-.}"
+  local name="$2"
 
   if ! docker image inspect ai_sandbox &>/dev/null; then
     echo "confine: image 'ai_sandbox' does not exist - build it first with ./build.sh" >&2
@@ -32,7 +10,7 @@ confine() {
   fi
 
   local cid
-  cid="$(docker run -d "${net_args[@]}" ${name:+--name "$name"} \
+  cid="$(docker run -d ${name:+--name "$name"} \
     -v ~/.ai_agent_env:/home/agent/.ai_agent_env \
     -v ~/.claude:/home/agent/.claude \
     -v ~/.claude.json:/home/agent/.claude.json \
