@@ -25,6 +25,7 @@ RUN mkdir -p /home/agent/.claude && chown agent:agent /home/agent/.claude
 RUN mkdir -p /home/agent/.local && chown agent:agent /home/agent/.local
 RUN mkdir -p /home/agent/.tmux && chown agent:agent /home/agent/.tmux
 RUN mkdir -p /home/agent/.config && chown agent:agent /home/agent/.config
+RUN mkdir -p /home/agent/.copilot && chown agent:agent /home/agent/.copilot
 RUN mkdir -p /home/agent/.ai_agent_env && chown agent:agent /home/agent/.ai_agent_env
 
 USER agent
@@ -38,7 +39,7 @@ RUN brew install node
 RUN npm install -g @anthropic-ai/claude-code
 RUN npm install -g --ignore-scripts @earendil-works/pi-coding-agent
 RUN npm install -g opencode-ai
-RUN brew install neovim fd rg tmux yt-dlp ffmpeg socat bubblewrap gh actionlint jq yq tailscale
+RUN brew install neovim fd rg tmux yt-dlp ffmpeg socat bubblewrap gh actionlint jq yq tailscale copilot-cli
 
 RUN sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
@@ -88,10 +89,6 @@ start-tailscale() {
   echo "Authenticated. Current status:"
   tailscale --socket="$sock" status
 
-  # Set proxy env vars so AI agents route through tailscaled. Its
-  # HTTP proxy (--outbound-http-proxy-listen) forwards tailnet names AND acts as
-  # a normal pass-through proxy for non-tailnet traffic, so a single HTTP proxy
-  # covers both the self-hosted model and any external APIs.
   local sock="/tmp/tailscaled.sock"
   if ! tailscale --socket="$sock" status >/dev/null 2>&1; then
     echo "export-tailscale-proxy: tailscale is not up; not setting proxy" >&2

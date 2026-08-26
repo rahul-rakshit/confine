@@ -24,6 +24,7 @@ confine() {
     -v ~/.config/opencode:/home/agent/.config/opencode \
     -v ~/.local/share/opencode:/home/agent/.local/share/opencode \
     -v ~/.local/state/opencode:/home/agent/.local/state/opencode \
+    -v ~/.copilot:/home/agent/.copilot \
     -v ~/.config/nvim:/home/agent/.config/nvim:ro \
     -v ~/.tmux.conf:/home/agent/.tmux.conf:ro \
     -v ~/.tmux:/home/agent/.tmux:ro \
