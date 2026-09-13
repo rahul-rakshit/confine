@@ -41,9 +41,6 @@ RUN npm install -g --ignore-scripts @earendil-works/pi-coding-agent
 RUN npm install -g opencode-ai
 RUN brew install neovim fd rg tmux yt-dlp ffmpeg socat bubblewrap gh actionlint jq yq tailscale copilot-cli uv
 
-RUN sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
-       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-
 RUN echo "export LANG=en_US.UTF-8" >> /home/agent/.bashrc
 RUN echo "export EDITOR=nvim" >> /home/agent/.bashrc
 RUN echo "alias vim='nvim'" >> /home/agent/.bashrc
